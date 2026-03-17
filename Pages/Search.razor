@@ -1,0 +1,73 @@
+@page "/search"
+@inject NavigationManager NavManager
+
+<div class="search-container">
+    <header class="search-header">
+        <div class="search-input-wrapper">
+            <svg class="search-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+            </svg>
+            <input type="text" 
+                   placeholder="Search by title or author..." 
+                   @bind="SearchQuery" 
+                   @bind:event="oninput" 
+                   class="search-bar" />
+        </div>
+    </header>
+
+    @if (FilteredBooks.Any())
+    {
+        <div class="results-info">
+            Found @FilteredBooks.Count() books
+        </div>
+        <div class="book-grid">
+            @foreach (var book in FilteredBooks)
+            {
+                <div class="book-card" @onclick='() => NavManager.NavigateTo("reader")'>
+                    <div class="book-cover placeholder-@book.ColorTheme">
+                        <span class="cover-text">@book.Title</span>
+                    </div>
+                    <div class="book-details">
+                        <h4 class="book-title">@book.Title</h4>
+                        <p class="book-author">@book.Author</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>
+            <p>We couldn't find any books matching "@SearchQuery"</p>
+        </div>
+    }
+</div>
+
+@code {
+    private string SearchQuery { get; set; } = "";
+
+    private List<BookModel> AllBooks = new()
+    {
+        new BookModel { Title = "It Ends with Us", Author = "Colleen Hoover", ColorTheme = "blush" },
+        new BookModel { Title = "Book Lovers", Author = "Emily Henry", ColorTheme = "peach" },
+        new BookModel { Title = "Pride and Prejudice", Author = "Jane Austen", ColorTheme = "slate" },
+        new BookModel { Title = "The Love Hypothesis", Author = "Ali Hazelwood", ColorTheme = "blush" },
+        new BookModel { Title = "The Seven Husbands of Evelyn Hugo", Author = "Taylor Jenkins Reid", ColorTheme = "emerald" },
+        new BookModel { Title = "A Court of Thorns and Roses", Author = "Sarah J. Maas", ColorTheme = "lavender" }
+    };
+
+    private IEnumerable<BookModel> FilteredBooks => AllBooks
+        .Where(b => string.IsNullOrWhiteSpace(SearchQuery) || 
+                    b.Title.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) || 
+                    b.Author.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase));
+
+    public class BookModel
+    {
+        public string Title { get; set; } = "";
+        public string Author { get; set; } = "";
+        public string ColorTheme { get; set; } = "slate";
+    }
+}

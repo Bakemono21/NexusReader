@@ -1,0 +1,55 @@
+﻿@inherits LayoutComponentBase
+@inject UserSettingsService Settings
+@inject NavigationManager NavManager
+@implements IDisposable
+
+<div class="app-root @(Settings.IsDarkMode ? "dark-theme" : "light-theme")" 
+     style="--dynamic-font-size: @(Settings.FontSize)px;">
+    
+    <div class="page-layout">
+        @* The sidebar now hides if we are on Auth OR Reader *@
+        @if (!IsFullscreenPage)
+        {
+            <aside class="sidebar">
+                <NavMenu />
+            </aside>
+        }
+
+        <main class="content-area">
+            @* We add 'no-padding' to the wrapper if in fullscreen mode *@
+            <article class="content-wrapper @(IsFullscreenPage ? "no-padding" : "")">
+                @Body
+            </article>
+        </main>
+    </div>
+</div>
+
+@code {
+    // Helper to check the current URL
+    private bool IsFullscreenPage => 
+        NavManager.Uri.EndsWith("/auth") || 
+        NavManager.Uri.Contains("/reader");
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Load saved settings
+        await Settings.InitializeAsync();
+        
+        // Subscribe to settings changes (Dark mode/Font size)
+        Settings.OnChange += StateHasChanged;
+        
+        // Subscribe to URL changes so the sidebar toggles correctly
+        NavManager.LocationChanged += HandleLocationChanged;
+    }
+
+    private void HandleLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        Settings.OnChange -= StateHasChanged;
+        NavManager.LocationChanged -= HandleLocationChanged;
+    }
+}

@@ -1,0 +1,59 @@
+@page "/profile"
+@inject NavigationManager NavManager
+
+<div class="profile-container">
+    <header class="profile-header">
+        <div class="avatar-circle">
+            <span>JD</span> </div>
+        <h1 class="user-name">Jane Doe</h1>
+        <p class="user-handle">@@romance_reader_26</p>
+        <button class="btn-edit">Edit Profile</button>
+    </header>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-value">12</span>
+            <span class="stat-label">Books Read</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value">5</span>
+            <span class="stat-label">This Month</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value">14</span>
+            <span class="stat-label">Day Streak</span>
+        </div>
+    </div>
+
+    <section class="goal-section">
+        <div class="goal-header">
+            <h2 class="section-title">2026 Reading Goal</h2>
+            <span class="goal-count">12 / 50 books</span>
+        </div>
+        <div class="goal-progress-bg">
+            <div class="goal-progress-fill" style="width: 24%;"></div>
+        </div>
+    </section>
+
+    <section class="history-section">
+        <h2 class="section-title">Recently Finished</h2>
+        <div class="history-list">
+            <div class="history-item">
+                <div class="mini-cover placeholder-blush"></div>
+                <div class="history-info">
+                    <span class="history-title">It Ends with Us</span>
+                    <span class="history-date">Finished Mar 12, 2026</span>
+                </div>
+                <div class="rating">⭐⭐⭐⭐⭐</div>
+            </div>
+            <div class="history-item">
+                <div class="mini-cover placeholder-sky"></div>
+                <div class="history-info">
+                    <span class="history-title">Beach Read</span>
+                    <span class="history-date">Finished Feb 28, 2026</span>
+                </div>
+                <div class="rating">⭐⭐⭐⭐</div>
+            </div>
+        </div>
+    </section>
+</div>

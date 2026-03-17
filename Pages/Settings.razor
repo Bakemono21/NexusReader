@@ -1,0 +1,77 @@
+@page "/settings"
+@using NexusReader.Services
+@inject UserSettingsService SettingsService
+@inject NavigationManager NavManager
+@inject IJSRuntime JS
+@implements IDisposable
+
+<div class="settings-container">
+    <header class="settings-header">
+        @* This button now correctly uses the GoBack method *@
+        <button class="back-link" @onclick="GoBack">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M15 18l-6-6 6-6" />
+            </svg>
+            Back
+        </button>
+        <h1 class="title">Settings</h1>
+        <p class="subtitle">Customize your reading experience</p>
+    </header>
+
+    <div class="settings-list">
+        <section class="settings-section">
+            <h2 class="section-label">Appearance</h2>
+            <div class="setting-item">
+                <div class="setting-info">
+                    <span class="setting-name">Dark Mode</span>
+                    <span class="setting-desc">Easier on the eyes in low light</span>
+                </div>
+                <button class="toggle-switch @(SettingsService.IsDarkMode ? "active" : "")" 
+                        @onclick="async () => await SettingsService.ToggleDarkMode()">
+                    <div class="toggle-handle"></div>
+                </button>
+            </div>
+        </section>
+
+        <section class="settings-section">
+            <h2 class="section-label">Typography</h2>
+            <div class="setting-item column">
+                <div class="setting-info">
+                    <span class="setting-name">Font Size (@(SettingsService.FontSize)px)</span>
+                </div>
+                <div class="slider-container">
+                    <span class="font-preview small">A</span>
+                    <input type="range" min="12" max="32" step="1" 
+                           value="@SettingsService.FontSize" 
+                           @oninput="UpdateFontSize" />
+                    <span class="font-preview large">A</span>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+@code {
+    private async Task GoBack()
+    {
+        await JS.InvokeVoidAsync("history.back");
+    }
+
+    private async Task UpdateFontSize(ChangeEventArgs e)
+    {
+        if (double.TryParse(e.Value?.ToString(), out var size))
+        {
+            await SettingsService.SetFontSize(size);
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        SettingsService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        SettingsService.OnChange -= StateHasChanged;
+    }
+}

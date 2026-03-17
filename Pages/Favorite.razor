@@ -1,0 +1,58 @@
+@page "/favorites"
+@inject NavigationManager NavManager
+
+<div class="favorites-container">
+    <header class="favorites-header">
+        <h1 class="title">My Favorites</h1>
+        <p class="subtitle">The stories that stayed with you.</p>
+    </header>
+
+    @if (FavoriteBooks.Any())
+    {
+        <div class="book-grid">
+            @foreach (var book in FavoriteBooks)
+            {
+                <div class="book-card" @onclick='() => NavManager.NavigateTo("reader")'>
+                    <div class="book-cover placeholder-@book.ColorTheme">
+                        <div class="heart-badge">❤️</div>
+                        <span class="cover-text">@book.Title</span>
+                    </div>
+                    <div class="book-details">
+                        <h4 class="book-title">@book.Title</h4>
+                        <p class="book-author">@book.Author</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-favorites">
+            <div class="empty-icon">💖</div>
+            <h2>No favorites yet</h2>
+            <p>Tap the heart on any book to save it to your personal collection.</p>
+            <button class="btn-primary" @onclick='() => NavManager.NavigateTo("")'>Explore Library</button>
+        </div>
+    }
+</div>
+
+@code {
+    // In a real app, this list would be managed by a shared Service
+    private List<BookModel> AllBooks = new()
+    {
+        new BookModel { Title = "It Ends with Us", Author = "Colleen Hoover", ColorTheme = "blush", IsFavorite = true },
+        new BookModel { Title = "The Love Hypothesis", Author = "Ali Hazelwood", ColorTheme = "blush", IsFavorite = true },
+        new BookModel { Title = "Book Lovers", Author = "Emily Henry", ColorTheme = "peach", IsFavorite = false },
+        new BookModel { Title = "Pride and Prejudice", Author = "Jane Austen", ColorTheme = "slate", IsFavorite = true }
+    };
+
+    private IEnumerable<BookModel> FavoriteBooks => AllBooks.Where(b => b.IsFavorite);
+
+    public class BookModel
+    {
+        public string Title { get; set; } = "";
+        public string Author { get; set; } = "";
+        public string ColorTheme { get; set; } = "slate";
+        public bool IsFavorite { get; set; }
+    }
+}

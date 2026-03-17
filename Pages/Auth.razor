@@ -1,0 +1,116 @@
+@page "/auth"
+@inject NavigationManager NavManager
+@inject AuthStateService AuthState
+<div class="auth-wrapper">
+    <div class="auth-visual">
+        <div class="visual-content">
+            @* We use a simpler, cleaner graphic that fits the romance vibe *@
+            <svg class="visual-graphic" viewBox="0 0 400 300" fill="none">
+                @* Placeholder for a stylized, looping rose or book outline *@
+                <path d="M200,50 Q250,100 200,150 Q150,200 200,250" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M180,70 L220,130 M220,70 L180,130" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <h1 class="visual-title">Find Your Next Great Escape</h1>
+            <p class="visual-subtitle">Welcome to NexusReader, the ultimate sanctuary for your collection.</p>
+        </div>
+    </div>
+
+    <div class="auth-form-container">
+        <div class="auth-card">
+            <header class="auth-header">
+                <div class="logo-box">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+                    </svg>
+                </div>
+                <h1 class="auth-title">@(IsLoginMode ? "Sign in to NexusReader" : "Create your account")</h1>
+                @if (!IsLoginMode)
+                {
+                    <p class="auth-subtitle">Join thousands of readers and start your journey.</p>
+                }
+            </header>
+
+            <form @onsubmit="HandleAuth" class="auth-form">
+            @if (!IsLoginMode)
+            {
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>First Name</label>
+                        <input type="text" placeholder="Jane" required />
+                    </div>
+                    <div class="input-group">
+                        <label>Last Name</label>
+                        <input type="text" placeholder="Doe" required />
+                    </div>
+                </div>
+            }
+
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" placeholder="name@example.com" required />
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" placeholder="••••••••" required />
+            </div>
+
+            @if (!IsLoginMode)
+            {
+                <div class="input-group">
+                    <label>Confirm Password</label>
+                    <input type="password" placeholder="••••••••" required />
+                </div>
+
+                <div class="age-verification">
+                    <label>Are you over 18 years old?</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="age" value="yes" required />
+                            <span>Yes</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="age" value="no" />
+                            <span>No</span>
+                        </label>
+                    </div>
+                </div>
+            }
+            
+            @if (IsLoginMode)
+            {
+                <button type="button" class="btn-link forgot-password">Forgot Password?</button>
+            }
+
+            <button type="submit" class="btn-primary auth-submit">
+                @(IsLoginMode ? "Sign In" : "Sign Up")
+            </button>
+        </form>
+
+            <div class="auth-footer">
+                <button class="btn-secondary" @onclick="() => IsLoginMode = !IsLoginMode">
+                    @(IsLoginMode ? "Don't have an account? Sign Up" : "Already have an account? Sign In")
+                </button>
+                
+                <hr class="divider" />
+                
+                @* Dev Shortcut *@
+                <button type="button" class="btn-admin-shortcut" @onclick="LoginAsAdmin">
+                    Login as Admin (Dev Shortcut)
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool IsLoginMode = true;
+
+
+    private void HandleAuth() => NavManager.NavigateTo("");
+    private void LoginAsAdmin()
+    {
+        AuthState.SetAdmin(true);
+        NavManager.NavigateTo("admin/dashboard");
+    }
+}

@@ -1,0 +1,71 @@
+.page-layout {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--bg-main);
+}
+
+.sidebar {
+    width: 260px;
+    background-color: var(--bg-panel);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0; /* Prevents sidebar from squishing */
+}
+
+.content-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    position: relative;
+}
+
+.content-wrapper {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    transition: padding 0.2s ease;
+}
+
+/* Removes padding for Auth and Reader so they hit the screen edges */
+.no-padding {
+    padding: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+    .page-layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        border-right: none;
+        border-top: 1px solid var(--border-color);
+        background-color: var(--bg-panel);
+    }
+
+    .content-area {
+        /* Space for the bottom nav bar on mobile */
+        padding-bottom: 80px; 
+    }
+
+    .content-wrapper {
+        padding: 1.5rem 1rem;
+    }
+
+    /* In fullscreen mode on mobile (like the Reader), we don't need the bottom padding */
+    .no-padding {
+        padding-bottom: 0 !important;
+    }
+}

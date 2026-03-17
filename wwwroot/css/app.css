@@ -1,0 +1,159 @@
+/* --- GLOBAL THEME VARIABLES --- */
+:root {
+    /* Core Backgrounds (Dark Slate) */
+    --bg-main: #0f172a;       /* Deepest background for the main reading/dashboard area */
+    --bg-panel: #1e293b;      /* Slightly lighter for sidebars, cards, and modals */
+    --bg-hover: #334155;      /* Hover states for buttons and lists */
+
+    /* Borders & Dividers */
+    --border-color: #334155;
+
+    /* Text Colors */
+    --text-primary: #f8fafc;  /* Bright white/gray for readable text */
+    --text-secondary: #94a3b8;/* Muted gray for subtitles and icons */
+
+    /* Brand Accents (Indigo/Purple based on mockups) */
+    --accent-primary: #6366f1; 
+    --accent-hover: #4f46e5;
+    
+    /* Typography */
+    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* --- BASE STYLES --- */
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased; /* Makes text look crisper on modern screens */
+    min-height: 100vh;
+}
+
+/* --- CUSTOM SCROLLBAR --- */
+/* Gives the app a native, polished feel instead of the chunky default browser scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+/* Base button reset so we can style them beautifully later */
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+/* --- BLAZOR ERROR UI --- */
+#blazor-error-ui {
+    display: none; /* Hides it by default! */
+    background-color: #ef4444; /* A nice modern red */
+    color: white;
+    bottom: 0;
+    left: 0;
+    padding: 0.75rem 1.5rem;
+    position: fixed;
+    width: 100%;
+    z-index: 9999;
+    box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#blazor-error-ui a {
+    color: white !important;
+    text-decoration: underline !important;
+    margin-left: 1rem;
+    cursor: pointer;
+}
+
+#blazor-error-ui .dismiss {
+    text-decoration: none !important;
+    font-weight: bold;
+}
+
+/* --- THEME LOGIC --- */
+
+/* LIGHT THEME DEFINITION */
+.light-theme {
+    --bg-main: #f1f5f9;      /* Light gray background */
+    --bg-panel: #ffffff;    /* Pure white sidebar/cards */
+    --bg-hover: #f8fafc;
+    --text-primary: #0f172a; /* Dark slate text */
+    --text-secondary: #64748b;
+    --border-color: #e2e8f0;
+    --accent-primary: #4f46e5;
+}
+
+/* DARK THEME DEFINITION (Default) */
+.dark-theme {
+    --bg-main: #0f172a;
+    --bg-panel: #1e293b;
+    --bg-hover: #334155;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --accent-primary: #6366f1;
+}
+
+/* Ensure the wrapper fills the screen */
+.app-root {
+    min-height: 100vh;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Updated Back Button Style for Settings */
+.back-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--accent-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0;
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+}
+
+/* --- Global Book Themes --- */
+.placeholder-peach { background: linear-gradient(135deg, #fb923c, #ea580c); }
+.placeholder-slate { background: linear-gradient(135deg, #64748b, #334155); }
+.placeholder-emerald { background: linear-gradient(135deg, #10b981, #047857); }
+.placeholder-lavender { background: linear-gradient(135deg, #a78bfa, #7c3aed); }
+.placeholder-blush { background: linear-gradient(135deg, #f43f5e, #be123c); }
+.placeholder-sky { background: linear-gradient(135deg, #38bdf8, #0284c7); }
+.placeholder-rose { background: linear-gradient(135deg, #fb7185, #e11d48); }
+
+/* Ensure placeholders have a default look if no image exists */
+.main-cover, .book-cover {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Common placeholder text style */
+.cover-text {
+    color: white;
+    font-weight: 800;
+    text-align: center;
+    padding: 1rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}

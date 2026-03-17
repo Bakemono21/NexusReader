@@ -1,0 +1,99 @@
+@page "/admin/editor/{BookId:int}"
+@using NexusReader.Models
+@using NexusReader.Services
+@inject BookService BookService
+@inject NavigationManager NavManager
+
+<div class="editor-page">
+    @if (CurrentBook != null)
+    {
+        <header class="editor-header">
+            <div class="header-left">
+                <button class="btn-back-circle" @onclick='() => NavManager.NavigateTo("admin/dashboard")'>
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <div class="header-meta">
+                    <h1>@CurrentBook.Title</h1>
+                    <span class="status-badge">Drafting Manuscript</span>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="save-status-group">
+                    @if (IsSaving)
+                    {
+                        <div class="spinner-tiny"></div>
+                    }
+                    <span class="save-indicator @(IsSaving ? "saving" : "")">
+                        @(IsSaving ? "Saving..." : "All changes saved")
+                    </span>
+                </div>
+                <button class="btn-primary action-save" @onclick="SaveContent" disabled="@IsSaving">
+                    @if (IsSaving)
+                    {
+                        <span>Saving...</span>
+                    }
+                    else
+                    {
+                        <span>Save Draft</span>
+                    }
+                </button>
+            </div>
+        </header>
+
+        <div class="editor-layout">
+            <aside class="editor-sidebar">
+                <div class="sidebar-header">
+                    <h3>Chapters</h3>
+                </div>
+                <nav class="chapter-list">
+                    @* Hardcoded for now - we will loop through CurrentBook.Chapters later *@
+                    <button class="chapter-item active">
+                        <span class="ch-num">1</span>
+                        <span class="ch-name">The Beginning</span>
+                    </button>
+                    <button class="chapter-item">
+                        <span class="ch-num">2</span>
+                        <span class="ch-name">The Encounter</span>
+                    </button>
+                    <button class="btn-add-chapter">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                        Add Chapter
+                    </button>
+                </nav>
+            </aside>
+
+            <main class="editor-main">
+                <div class="writing-paper">
+                    <input class="title-field" @bind="ChapterTitle" placeholder="Untitled Chapter" />
+                    <textarea class="content-field" @bind="BookContent" placeholder="Start your story..."></textarea>
+                </div>
+            </main>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public int BookId { get; set; }
+    private BookModel? CurrentBook;
+    private string ChapterTitle = "Chapter One";
+    private string BookContent = "";
+    private bool IsSaving = false;
+
+    protected override void OnInitialized()
+    {
+        CurrentBook = BookService.GetBookById(BookId);
+        if (CurrentBook == null) NavManager.NavigateTo("admin/dashboard");
+        
+        BookContent = CurrentBook?.Description ?? "";
+    }
+
+    private async Task SaveContent()
+    {
+        IsSaving = true;
+        // Simulating an async save
+        await Task.Delay(800); 
+        if (CurrentBook != null) CurrentBook.Description = BookContent;
+        IsSaving = false;
+    }
+}

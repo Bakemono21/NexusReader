@@ -1,0 +1,76 @@
+@page "/book/{BookId:int}"
+@inject BookService BookService
+@inject NavigationManager NavManager
+
+<div class="details-container">
+    <button class="btn-back" @onclick='() => NavManager.NavigateTo("")'>
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M15 19l-7-7 7-7"/>
+        </svg>
+        Back to Library
+    </button>
+
+    @if (CurrentBook != null)
+    {
+        <div class="details-layout">
+            <div class="cover-section">
+                @if (!string.IsNullOrEmpty(CurrentBook.CoverImage))
+                {
+                    <img src="@CurrentBook.CoverImage" class="main-cover" />
+                }
+                else
+                {
+                    <div class="main-cover placeholder-@CurrentBook.ColorTheme"></div>
+                }
+            </div>
+
+            <div class="info-section">
+                <div class="badge-row">
+                    <span class="category-badge">@CurrentBook.Category</span>
+                    @if (CurrentBook.Progress == 0)
+                    {
+                        <span class="status-badge">New Discovery</span>
+                    }
+                </div>
+
+                <h1 class="book-title">@CurrentBook.Title</h1>
+                <p class="book-author">by @CurrentBook.Author</p>
+
+                <div class="rating-row">
+                    <span class="stars">⭐⭐⭐⭐⭐</span>
+                    <span class="review-count">(1,240 Reviews)</span>
+                </div>
+
+                <div class="action-row">
+                    <button class="btn-primary main-action" @onclick='() => NavManager.NavigateTo($"reader/{CurrentBook.Id}")'>
+    Start Reading
+</button>
+                    <button class="btn-secondary-outline">
+                        Add to Favorites
+                    </button>
+                </div>
+
+                <div class="description">
+                    <h3>About this book</h3>
+                    <p>@CurrentBook.Description</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public int BookId { get; set; }
+    private BookModel? CurrentBook;
+
+    protected override void OnInitialized()
+    {
+        // Simple! Grab it from the service
+        CurrentBook = BookService.GetBookById(BookId);
+
+        if (CurrentBook == null)
+        {
+            NavManager.NavigateTo("");
+        }
+    }
+}
