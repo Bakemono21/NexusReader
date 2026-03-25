@@ -1,225 +1,331 @@
 /* Ensure the whole page is covered */
 .auth-wrapper {
-    display: grid;
-    /* Split layout on wider screens */
-    grid-template-columns: 1fr 1fr;
-    min-height: 100vh;
-    background-color: var(--bg-main); 
-    color: var(--text-primary);
-    animation: fadeIn 0.5s ease-out;
+  display: grid;
+  /* Split layout on wider screens */
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  animation: fadeIn 0.5s ease-out;
 }
 
 /* --- Left Side: Visual/Illustration Area --- */
 .auth-visual {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4rem;
-    text-align: center;
-    background: radial-gradient(circle at center, rgba(99, 102, 241, 0.05) 0%, rgba(15, 23, 42, 0) 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  text-align: center;
+  background: radial-gradient(
+    circle at center,
+    rgba(99, 102, 241, 0.05) 0%,
+    rgba(15, 23, 42, 0) 70%
+  );
 }
 
-.visual-content { max-width: 400px; }
+.visual-content {
+  max-width: 400px;
+}
 
 .visual-graphic {
-    width: 100%;
-    max-width: 300px;
-    height: auto;
-    color: var(--accent-primary);
-    margin-bottom: 2rem;
-    opacity: 0.8;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  color: var(--accent-primary);
+  margin-bottom: 2rem;
+  opacity: 0.8;
 }
 
 .visual-title {
-    font-size: 2.25rem;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 1rem;
-    letter-spacing: -1px;
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  letter-spacing: -1px;
 }
 
 .visual-subtitle {
-    font-size: 1rem;
-    color: var(--text-secondary);
-    line-height: 1.6;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
 }
 
 /* --- Right Side: The Form Area --- */
 .auth-form-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
 }
 
 .auth-card {
-    background-color: var(--bg-panel);
-    border: 1px solid var(--border-color);
-    padding: 3rem 2.5rem;
-    border-radius: 1.5rem;
-    width: 100%;
-    /* Increase this from 440px to 480px or 500px to prevent overlapping */
-    max-width: 500px; 
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
-    box-sizing: border-box; /* Ensures padding doesn't add to width */
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  padding: 3rem 2.5rem;
+  border-radius: 1.5rem;
+  width: 100%;
+  /* Increase this from 440px to 480px or 500px to prevent overlapping */
+  max-width: 500px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box; /* Ensures padding doesn't add to width */
 }
 
-.auth-header { text-align: center; margin-bottom: 2.5rem; }
-.logo-box { color: var(--accent-primary); margin-bottom: 0.75rem; }
-.auth-title { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.5px; }
-.auth-subtitle { color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem; }
+.auth-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+.logo-box {
+  color: var(--accent-primary);
+  margin-bottom: 0.75rem;
+}
+.auth-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+.auth-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
 
 /* --- Form Layout & Groups --- */
-.auth-form { display: flex; flex-direction: column; gap: 1.25rem; }
-
-.input-row {
-    display: grid;
-    /* This ensures they stay side-by-side and equal size */
-    grid-template-columns: 1fr 1fr; 
-    gap: 1.25rem; /* Space between First and Last name */
-    width: 100%;
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
-.input-group { display: flex; flex-direction: column; gap: 0.5rem; }
-.input-group label { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); }
+.input-row {
+  display: grid;
+  /* This ensures they stay side-by-side and equal size */
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem; /* Space between First and Last name */
+  width: 100%;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.input-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
 
 .input-group input {
-    width: 100%;
-    box-sizing: border-box; 
-    padding: 0.8rem 1rem;
-    border-radius: 0.6rem;
-    border: 1px solid var(--border-color);
-    background-color: var(--bg-main);
-    color: var(--text-primary);
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.8rem 1rem;
+  border-radius: 0.6rem;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-main);
+  color: var(--text-primary);
 }
 
 .input-group input:focus {
-    border-color: var(--accent-primary);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-color: var(--accent-primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 /* --- Age Verification (Radio Buttons) --- */
 .age-verification {
-    margin: 0.5rem 0;
+  margin: 0.5rem 0;
 }
 
 .age-verification label {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    display: block;
-    margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: 0.75rem;
 }
 
 .radio-group {
-    display: flex;
-    gap: 2rem;
+  display: flex;
+  gap: 2rem;
 }
 
 .radio-option {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
 }
 
 .radio-option input[type="radio"] {
-    accent-color: var(--accent-primary);
-    width: 18px;
-    height: 18px;
-    margin: 0;
+  accent-color: var(--accent-primary);
+  width: 18px;
+  height: 18px;
+  margin: 0;
 }
 
 .radio-option span {
-    color: var(--text-primary) !important;
-    font-weight: 500 !important;
-    font-size: 0.9rem;
+  color: var(--text-primary) !important;
+  font-weight: 500 !important;
+  font-size: 0.9rem;
 }
 
 /* --- Buttons & Links --- */
-.auth-submit { 
-    width: 100%; 
-    padding: 0.9rem; 
-    margin-top: 0.5rem; 
-    font-size: 1rem; 
-    background-color: var(--accent-primary);
-    color: #ffffff; /* Contrast fix: white text on purple/indigo */
-    border-radius: 0.6rem;
-    font-weight: 600;
+.auth-submit {
+  width: 100%;
+  padding: 0.9rem;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  background-color: var(--accent-primary);
+  color: #ffffff; /* Contrast fix: white text on purple/indigo */
+  border-radius: 0.6rem;
+  font-weight: 600;
 }
 
-.btn-link, .forgot-password {
-    background: none;
-    border: none;
-    color: var(--accent-primary) !important; /* Theme-aware link color */
-    font-weight: 600;
-    cursor: pointer;
-    padding: 0;
+.btn-link,
+.forgot-password {
+  background: none;
+  border: none;
+  color: var(--accent-primary) !important; /* Theme-aware link color */
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
 }
 
 .forgot-password {
-    align-self: flex-end;
-    font-size: 0.8rem;
-    margin-top: -0.5rem;
+  align-self: flex-end;
+  font-size: 0.8rem;
+  margin-top: -0.5rem;
 }
 
-.auth-footer { margin-top: 1.5rem; text-align: center; display: flex; flex-direction: column; gap: 1.25rem; }
+.auth-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
 
-.divider { border: 0; border-top: 1px solid var(--border-color); width: 100%; margin: 0; }
+.divider {
+  border: 0;
+  border-top: 1px solid var(--border-color);
+  width: 100%;
+  margin: 0;
+}
 
 .btn-secondary {
-    background: none;
-    border: 1px solid var(--border-color);
-    color: var(--text-primary); /* Adapts: white in dark, slate in light */
-    padding: 0.6rem;
-    width: 100%;
-    border-radius: 0.6rem;
-    font-size: 0.9rem;
-    transition: background-color 0.2s;
-    font-weight: 500;
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary); /* Adapts: white in dark, slate in light */
+  padding: 0.6rem;
+  width: 100%;
+  border-radius: 0.6rem;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+  font-weight: 500;
 }
 
-.btn-secondary:hover { background-color: var(--bg-hover); }
+.btn-secondary:hover {
+  background-color: var(--bg-hover);
+}
 
 .btn-admin-shortcut {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    background: transparent;
-    border: 1px dashed var(--border-color);
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    cursor: pointer;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px dashed var(--border-color);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+/* Container: Fixed height and centered */
+.age-toggle-group {
+  display: flex;
+  background: #111122; /* Darker background to make buttons pop */
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 4px; /* Space between border and the buttons */
+  margin-top: 8px;
+  height: 48px; /* Fixed height for consistency with other inputs */
+  align-items: stretch;
+}
+
+/* Individual Options */
+.age-option {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
+  font-size: 0.9rem;
+  color: #888;
+  margin: 0; /* Remove any default label margins */
+  user-select: none;
+}
+
+/* Completely hide the radio dot */
+.age-option input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Active State: Matching your primary blue */
+.age-option.active {
+  background: #6366f1; /* Your button's primary purple/blue */
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Hover state for the inactive option */
+.age-option:not(.active):hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #ccc;
 }
 
 /* --- Mobile Responsiveness --- */
 @media (max-width: 900px) {
-    .auth-wrapper {
-        grid-template-columns: 1fr;
-    }
-    
-    .auth-visual {
-        padding: 3rem 2rem;
-        background: transparent;
-    }
-    
-    .visual-graphic { max-width: 120px; margin-bottom: 1rem;}
-    .visual-title { font-size: 1.75rem; }
-    
-    .auth-form-container {
-        padding: 1rem 1.5rem 3rem 1.5rem;
-        align-items: flex-start;
-    }
+  .auth-wrapper {
+    grid-template-columns: 1fr;
+  }
 
-    .input-row {
-        grid-template-columns: 1fr; /* Stack names on mobile */
-    }
-    
-    .auth-card {
-        padding: 2.5rem 1.5rem;
-        box-shadow: none;
-    }
+  .auth-visual {
+    padding: 3rem 2rem;
+    background: transparent;
+  }
+
+  .visual-graphic {
+    max-width: 120px;
+    margin-bottom: 1rem;
+  }
+  .visual-title {
+    font-size: 1.75rem;
+  }
+
+  .auth-form-container {
+    padding: 1rem 1.5rem 3rem 1.5rem;
+    align-items: flex-start;
+  }
+
+  .input-row {
+    grid-template-columns: 1fr; /* Stack names on mobile */
+  }
+
+  .auth-card {
+    padding: 2.5rem 1.5rem;
+    box-shadow: none;
+  }
 }
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

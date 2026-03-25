@@ -1,0 +1,6 @@
+@NexusReader.Api_HostAddress = http://localhost:5087
+
+GET {{NexusReader.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

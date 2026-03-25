@@ -1,12 +1,15 @@
 @page "/auth"
+@using NexusReader.Services
+@using NexusReader.Shared.Models
 @inject NavigationManager NavManager
 @inject AuthStateService AuthState
+@inject HttpClient Http
+
 <div class="auth-wrapper">
+    @* Visual side remains the same *@
     <div class="auth-visual">
         <div class="visual-content">
-            @* We use a simpler, cleaner graphic that fits the romance vibe *@
             <svg class="visual-graphic" viewBox="0 0 400 300" fill="none">
-                @* Placeholder for a stylized, looping rose or book outline *@
                 <path d="M200,50 Q250,100 200,150 Q150,200 200,250" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                 <path d="M180,70 L220,130 M220,70 L180,130" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
@@ -23,80 +26,92 @@
                         <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
                     </svg>
                 </div>
-                <h1 class="auth-title">@(IsLoginMode ? "Sign in to NexusReader" : "Create your account")</h1>
-                @if (!IsLoginMode)
+                
+                <h1 class="auth-title">
+                    @(IsLoginMode ? "Sign in to NexusReader" : "Create your account")
+                </h1>
+                
+                @if (!string.IsNullOrEmpty(errorMessage))
                 {
-                    <p class="auth-subtitle">Join thousands of readers and start your journey.</p>
+                    <p class="error-text" style="color: @(errorMessage.Contains("successful") || errorMessage.Contains("sent") ? "#4dff88" : "#ff4d4d"); font-size: 0.85rem; margin-top: 10px; font-weight: 500;">
+                        @errorMessage
+                    </p>
                 }
             </header>
 
-            <form @onsubmit="HandleAuth" class="auth-form">
-            @if (!IsLoginMode)
-            {
-                <div class="input-row">
-                    <div class="input-group">
-                        <label>First Name</label>
-                        <input type="text" placeholder="Jane" required />
+            @* Changed to OnSubmit and handle validation manually to prevent "freezing" *@
+            <EditForm Model="this" OnSubmit="HandleAuth" class="auth-form">
+                
+                @if (!IsLoginMode)
+                {
+                    <div style="display: flex; gap: 12px; margin-bottom: 15px;">
+                        <div class="input-group" style="flex: 1;">
+                            <label>First Name</label>
+                            <input type="text" placeholder="John" @bind="firstName" />
+                        </div>
+                        <div class="input-group" style="flex: 1;">
+                            <label>Last Name</label>
+                            <input type="text" placeholder="Doe" @bind="lastName" />
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label>Last Name</label>
-                        <input type="text" placeholder="Doe" required />
+
+                    <div class="input-group" style="margin-bottom: 20px;">
+                        <label>Age Verification</label>
+                        <div class="age-toggle-group">
+                            <div class="age-option @(isOver18 == true ? "active" : "")" @onclick="@(() => isOver18 = true)"> 
+                                Yes, I'm 18+
+                            </div>
+                            <div class="age-option @(isOver18 == false ? "active" : "")" @onclick="@(() => isOver18 = false)"> 
+                                No
+                            </div>
+                        </div>
                     </div>
-                </div>
-            }
+                }
 
-            <div class="input-group">
-                <label>Email Address</label>
-                <input type="email" placeholder="name@example.com" required />
-            </div>
-
-            <div class="input-group">
-                <label>Password</label>
-                <input type="password" placeholder="••••••••" required />
-            </div>
-
-            @if (!IsLoginMode)
-            {
                 <div class="input-group">
-                    <label>Confirm Password</label>
-                    <input type="password" placeholder="••••••••" required />
+                    <label>Email Address</label>
+                    <input type="email" placeholder="name@example.com" @bind="email" disabled="@(codeSent && !IsLoginMode)" />
                 </div>
 
-                <div class="age-verification">
-                    <label>Are you over 18 years old?</label>
-                    <div class="radio-group">
-                        <label class="radio-option">
-                            <input type="radio" name="age" value="yes" required />
-                            <span>Yes</span>
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="age" value="no" />
-                            <span>No</span>
-                        </label>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="••••••••" @bind="password" />
+                </div>
+
+                @if (!IsLoginMode)
+                {
+                    <div class="input-group">
+                        <label>Confirm Password</label>
+                        <input type="password" placeholder="••••••••" @bind="confirmPassword" />
                     </div>
-                </div>
-            }
-            
-            @if (IsLoginMode)
-            {
-                <button type="button" class="btn-link forgot-password">Forgot Password?</button>
-            }
 
-            <button type="submit" class="btn-primary auth-submit">
-                @(IsLoginMode ? "Sign In" : "Sign Up")
-            </button>
-        </form>
+                    @if (codeSent)
+                    {
+                        <div class="input-group verification-section" style="background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid #3498db; margin-top: 10px;">
+                            <label style="color: #3498db; font-weight: bold;">Verification Code</label>
+                            <input type="text" placeholder="6-digit code" @bind="verificationCode" maxlength="6" />
+                            <small style="color: #888; display: block; margin-top: 5px;">We sent a code to your email.</small>
+                        </div>
+                    }
+                }
+                
+                <button type="submit" class="btn-primary auth-submit" disabled="@isSubmitting">
+                    @if (isSubmitting)
+                    {
+                        <span>Processing...</span>
+                    }
+                    else
+                    {
+                        @if (IsLoginMode) { <span>Sign In</span> }
+                        else if (codeSent) { <span>Complete Registration</span> }
+                        else { <span>Get Verification Code</span> }
+                    }
+                </button>
+            </EditForm>
 
             <div class="auth-footer">
-                <button class="btn-secondary" @onclick="() => IsLoginMode = !IsLoginMode">
+                <button class="btn-secondary" @onclick="ToggleMode" disabled="@isSubmitting">
                     @(IsLoginMode ? "Don't have an account? Sign Up" : "Already have an account? Sign In")
-                </button>
-                
-                <hr class="divider" />
-                
-                @* Dev Shortcut *@
-                <button type="button" class="btn-admin-shortcut" @onclick="LoginAsAdmin">
-                    Login as Admin (Dev Shortcut)
                 </button>
             </div>
         </div>
@@ -105,12 +120,139 @@
 
 @code {
     private bool IsLoginMode = true;
+    private bool isSubmitting = false;
+    private bool codeSent = false;
+    private string errorMessage = "";
 
+    private string firstName = "";
+    private string lastName = "";
+    private bool? isOver18 = null; // Use nullable to track if they've picked an option
+    private string email = "";
+    private string password = "";
+    private string confirmPassword = "";
+    private string verificationCode = "";
 
-    private void HandleAuth() => NavManager.NavigateTo("");
-    private void LoginAsAdmin()
+    private async Task HandleAuth()
     {
-        AuthState.SetAdmin(true);
-        NavManager.NavigateTo("admin/dashboard");
+        if (isSubmitting) return;
+
+        errorMessage = "";
+        
+        // Manual Validation
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+        {
+            errorMessage = "Please fill in all fields.";
+            return;
+        }
+
+        isSubmitting = true;
+        StateHasChanged(); // Force UI to show "Processing..."
+
+        try
+        {
+            if (IsLoginMode)
+            {
+                var success = await AuthState.Login(email, password);
+                if (success) NavManager.NavigateTo("");
+                else errorMessage = "Invalid email or password.";
+            }
+            else
+            {
+                // Register Mode Validations
+                if (password != confirmPassword)
+                {
+                    errorMessage = "Passwords do not match.";
+                    isSubmitting = false;
+                    return;
+                }
+
+                if (isOver18 != true)
+                {
+                    errorMessage = "You must be 18 or older to register.";
+                    isSubmitting = false;
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
+                {
+                    errorMessage = "Please enter your full name.";
+                    isSubmitting = false;
+                    return;
+                }
+
+                if (!codeSent)
+                {
+                    // STEP 1: Request Email Code
+                    var response = await Http.PostAsJsonAsync("api/account/send-code", email);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        codeSent = true;
+                        errorMessage = "Verification code sent to your email!";
+                    }
+                    else
+                    {
+                        errorMessage = "Could not send email. Check if the address is correct.";
+                    }
+                }
+                else
+                {
+                    // STEP 2: Finalize Registration
+                    if (string.IsNullOrWhiteSpace(verificationCode))
+                    {
+                        errorMessage = "Please enter the verification code.";
+                        isSubmitting = false;
+                        return;
+                    }
+
+                    var regModel = new RegisterModel 
+                    { 
+                        FirstName = firstName,
+                        LastName = lastName,
+                        IsOver18 = true,
+                        Email = email, 
+                        Password = password, 
+                        ConfirmPassword = confirmPassword,
+                        VerificationCode = verificationCode 
+                    };
+
+                    var response = await Http.PostAsJsonAsync("api/account/register", regModel);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        errorMessage = "Registration successful! Please sign in.";
+                        IsLoginMode = true;
+                        codeSent = false;
+                        // Reset fields
+                        password = "";
+                        confirmPassword = "";
+                    }
+                    else
+                    {
+                        var msg = await response.Content.ReadAsStringAsync();
+                        errorMessage = "Registration failed: " + (msg.Length > 100 ? "Server Error" : msg);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Connection error. Please check your internet or API.";
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            isSubmitting = false;
+            StateHasChanged();
+        }
+    }
+
+    private void ToggleMode()
+    {
+        IsLoginMode = !IsLoginMode;
+        codeSent = false;
+        errorMessage = "";
+        firstName = "";
+        lastName = "";
+        isOver18 = null;
+        verificationCode = "";
     }
 }

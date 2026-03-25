@@ -13,5 +13,6 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddScoped<AuthStateService>();
 builder.Services.AddScoped<UserSettingsService>();
 builder.Services.AddSingleton<BookService>();
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5087/") });
 
 await builder.Build().RunAsync();

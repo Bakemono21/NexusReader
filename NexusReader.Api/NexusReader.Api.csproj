@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NexusReader.Shared\NexusReader.Shared.csproj" />
+    <ProjectReference Include="..\NexusReader.Server\NexusReader.Server.csproj" />
   </ItemGroup>
 
 </Project>
