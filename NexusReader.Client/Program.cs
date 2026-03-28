@@ -10,9 +10,10 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5087/") });
 builder.Services.AddScoped<AuthStateService>();
 builder.Services.AddScoped<UserSettingsService>();
-builder.Services.AddSingleton<BookService>();
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5087/") });
+builder.Services.AddScoped<BookService>();
+builder.Services.AddScoped<FavoriteService>();
 
 await builder.Build().RunAsync();

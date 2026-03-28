@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using NexusReader.Api.Services;
 using NexusReader.Shared.Models;
 
 namespace NexusReader.Api.Controllers
@@ -11,11 +12,13 @@ namespace NexusReader.Api.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMemoryCache _cache;
+        private readonly JwtTokenService _jwt;
 
-        public AccountController(UserManager<ApplicationUser> userManager, IMemoryCache cache)
+        public AccountController(UserManager<ApplicationUser> userManager, IMemoryCache cache, JwtTokenService jwt)
         {
             _userManager = userManager;
             _cache = cache;
+            _jwt = jwt;
         }
 
         [HttpPost("send-code")]
@@ -97,7 +100,17 @@ namespace NexusReader.Api.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
-                return Ok(new { Message = "Login successful", FirstName = user.FirstName });
+                var roles = await _userManager.GetRolesAsync(user);
+                var token = _jwt.CreateToken(user, roles);
+                return Ok(new
+                {
+                    Message = "Login successful",
+                    Token = token,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    Roles = roles
+                });
             }
             return Unauthorized("Invalid login attempt.");
         }
