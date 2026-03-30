@@ -45,6 +45,8 @@ namespace NexusReader.Services
             return await _http.GetFromJsonAsync<ChapterContentResponse>($"api/chapters/{chapterId}");
         }
 
+        
+
         public async Task<ChapterModel?> CreateChapterAsync(UpsertChapterRequest request)
         {
             ApplyAuth();

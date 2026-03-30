@@ -41,7 +41,9 @@ namespace NexusReader.Api.Controllers
                     f.Book.ColorTheme,
                     f.Book.Progress,
                     f.Book.UploadDate,
-                    f.Book.Chapters.Count))
+                    f.Book.Chapters.Count,
+                    f.Book.IsPublished
+                    ))
                 .ToListAsync();
 
             return Ok(books);

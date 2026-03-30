@@ -110,6 +110,16 @@
   gap: 1.25rem;
 }
 
+/* New: Styling for in-modal error messages */
+.modal-error-message {
+  background-color: #fca5a5; /* Red-pink background */
+  color: #b91c1c; /* Darker red text */
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin-top: 1rem; /* Space above the error */
+  font-size: 0.9rem;
+}
+
 .input-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -497,6 +507,29 @@
   text-align: center;
   padding: 3rem;
   color: var(--text-secondary);
+}
+
+.input-group textarea {
+  width: 100%;
+  max-width: 100%; /* Prevents stretching beyond the modal */
+  box-sizing: border-box; /* Ensures padding is calculated inward */
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-color, #e2e8f0);
+  background: var(--bg-main, #f8fafc);
+  color: var(--text-primary, #0f172a);
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical; /* Only allow up/down resizing to protect layout */
+  min-height: 120px;
+  transition: all 0.2s ease;
+}
+
+.input-group textarea:focus {
+  outline: none;
+  border-color: var(--accent-primary, #6366f1);
+  background: var(--bg-panel, #ffffff);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 /* --- THE MOBILE RESPONSIVE OVERHAUL --- */

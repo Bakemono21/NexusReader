@@ -32,7 +32,9 @@ namespace NexusReader.Api.Controllers
                     b.ColorTheme,
                     b.Progress,
                     b.UploadDate,
-                    b.Chapters.Count))
+                    b.Chapters.Count,
+                    b.IsPublished
+                    ))
                 .ToListAsync();
 
             return Ok(list);
@@ -105,6 +107,7 @@ namespace NexusReader.Api.Controllers
             book.Category = request.Category;
             book.ColorTheme = request.ColorTheme;
             book.Progress = request.Progress;
+            book.IsPublished = request.IsPublished;
 
             await _db.SaveChangesAsync();
             return NoContent();

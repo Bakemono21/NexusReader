@@ -1,6 +1,8 @@
 @page "/admin/dashboard"
 @using NexusReader.Shared.Models
 @using NexusReader.Services
+
+@inject IJSRuntime JSRuntime
 @inject NavigationManager NavManager
 @inject BookService BookService
 
@@ -86,8 +88,8 @@
                                 <span class="category-tag">@book.Category</span>
                             </td>
                             <td data-label="Status">
-                                <span class="status-badge @(book.Progress >= 100 ? "completed" : "draft")">
-                                    @(book.Progress >= 100 ? "Completed" : "Draft")
+                                <span class="status-badge @(book.IsPublished ? "completed" : "draft")">
+                                    @(book.IsPublished ? "Published" : "Draft")
                                 </span>
                             </td>
                             <td data-label="Actions">
@@ -146,8 +148,16 @@
                     <label>Description</label>
                     <textarea rows="4" placeholder="Synopsis…" @bind="NewBook.Description"></textarea>
                 </div>
+                
+                <div class="input-group" style="display: flex; align-items: center; gap: 10px; margin-top: 10px; background: rgba(99, 102, 241, 0.1); padding: 15px; border-radius: 8px;">
+                    <input type="checkbox" id="isPublishedCheck" @bind="NewBook.IsPublished" style="width: 20px; height: 20px; cursor: pointer;" />
+                    <label for="isPublishedCheck" style="margin: 0; cursor: pointer;">
+                        <strong>Publish to Library</strong><br/>
+                        <small style="color: #94a3b8;">If unchecked, this book remains a draft.</small>
+                    </label>
+                </div>
 
-                <div class="input-group">
+                <div class="input-group" style="margin-top: 15px;">
                     <label>Book Cover Image</label>
                     <div class="file-upload-container">
                         <div class="book-preview-box @NewBook.ColorTheme">
@@ -197,6 +207,11 @@
                         </select>
                     </div>
                 </div>
+
+                @if (!string.IsNullOrEmpty(ModalErrorMessage))
+                {
+                    <div class="modal-error-message">@ModalErrorMessage</div>
+                }
             </div>
 
             <footer class="modal-footer">
@@ -241,6 +256,7 @@
     private bool ShowDeleteModal;
     private bool IsEditing;
     private BookModel NewBook = new();
+    private string? ModalErrorMessage; // New property for in-modal errors
     private BookSummaryResponse? BookToDelete;
     private string SearchTerm = "";
 
@@ -263,27 +279,52 @@
 
     private void OpenAddBookModal()
     {
+        ModalErrorMessage = null; // Clear previous errors
         IsEditing = false;
-        NewBook = new BookModel { Category = "Romance", ColorTheme = "blush", Description = "" };
+        NewBook = new BookModel { Category = "Romance", ColorTheme = "blush", Description = "", IsPublished = false };
         ShowModal = true;
     }
 
+
     private async Task OpenEditBookModal(BookSummaryResponse book)
     {
-        IsEditing = true;
-        var full = await BookService.GetBookAsync(book.Id);
-        NewBook = full ?? new BookModel
+        try 
         {
-            Id = book.Id,
-            Title = book.Title,
-            Author = book.Author,
-            Category = book.Category,
-            ColorTheme = book.ColorTheme,
-            CoverImageUrl = book.CoverImageUrl,
-            Progress = book.Progress,
-            Description = ""
-        };
-        ShowModal = true;
+            IsEditing = true;
+            
+            // Fetch the full details from the API
+            var full = await BookService.GetBookAsync(book.Id);
+            
+            if (full != null) 
+            {
+                NewBook = full;
+            }
+            else 
+            {
+                // Safe Fallback if API response is empty
+                NewBook = new BookModel
+                {
+                    Id = book.Id,
+                    Title = book.Title,
+                    Author = book.Author,
+                    Category = book.Category,
+                    ColorTheme = book.ColorTheme,
+                    CoverImageUrl = book.CoverImageUrl,
+                    Progress = book.Progress,
+                    Description = ""
+                };
+            }
+            ModalErrorMessage = null; // Clear previous errors
+            ShowModal = true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching book details: {ex.Message}");
+            ModalErrorMessage = "Failed to load book details for editing. Please try again.";
+            // Keep the modal open to show the error
+            ShowModal = true;
+            // Optional: You could show a Javascript alert here if it fails
+        }
     }
 
     private void CloseModal() => ShowModal = false;
@@ -324,6 +365,14 @@
 
     private async Task SaveBookAsync()
     {
+
+        if (string.IsNullOrWhiteSpace(NewBook.Title) || string.IsNullOrWhiteSpace(NewBook.Author))
+        {
+            ModalErrorMessage = "Error: The Book Title and Author fields are required.";
+            // StateHasChanged is implicitly called due to property change on render fragment
+            return; // Stops the save process immediately
+        }
+
         if (IsEditing)
         {
             await BookService.UpdateBookAsync(NewBook.Id, new UpdateBookRequest(
@@ -333,7 +382,8 @@
                 NewBook.CoverImageUrl,
                 NewBook.Category,
                 NewBook.ColorTheme,
-                NewBook.Progress));
+                NewBook.Progress,
+                NewBook.IsPublished)); 
         }
         else
         {
@@ -343,7 +393,8 @@
                 NewBook.Description,
                 NewBook.CoverImageUrl,
                 NewBook.Category,
-                NewBook.ColorTheme));
+                NewBook.ColorTheme
+                ));
         }
 
         await LoadBooksAsync();

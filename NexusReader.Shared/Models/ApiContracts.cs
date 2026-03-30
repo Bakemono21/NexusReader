@@ -15,7 +15,8 @@ namespace NexusReader.Shared.Models
         string? CoverImageUrl,
         string Category,
         string ColorTheme,
-        int Progress);
+        int Progress,
+        bool IsPublished);
 
     public record UpsertChapterRequest(
         int? Id,
@@ -35,7 +36,8 @@ namespace NexusReader.Shared.Models
         string ColorTheme,
         int Progress,
         DateTime UploadDate,
-        int ChapterCount);
+        int ChapterCount,
+        bool IsPublished);
 
     public record ChapterListItemResponse(int Id, int ChapterNumber, string Title);
 

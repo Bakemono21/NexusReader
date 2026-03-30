@@ -16,6 +16,8 @@ namespace NexusReader.Shared.Models
         public string Category { get; set; } = "Romance";
         public DateTime UploadDate { get; set; } = DateTime.UtcNow;
 
+        public bool IsPublished { get; set; } = false;
+
         public string ColorTheme { get; set; } = "blush";
         public int Progress { get; set; }
 

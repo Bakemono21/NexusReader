@@ -37,5 +37,13 @@
         updateViaCache: "none",
       });
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/mobile-drag-drop@2.3.0-rc.2/index.min.js"></script>
+    <script>
+      // If the user holds the dots for 300 milliseconds, it initiates a drag!
+      MobileDragDrop.polyfill({
+        holdToDrag: 300,
+      });
+    </script>
   </body>
 </html>
